@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Punime Gipsi DITI – Website
 
-## Getting Started
+Faqja e internetit për **Punime Gipsi DITI** (Punime Gipsi · Patinim · Lyerje), e ndërtuar me Next.js (App Router), TypeScript, Tailwind CSS dhe Lucide React.
 
-First, run the development server:
+## Nisja lokale
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Kontrollet dhe versioni për prodhim:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npx tsc --noEmit   # kontroll tipesh
+npm run lint
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Nëse `npm run dev` është ndezur, build-i mund të bëhet në një dosje tjetër që të mos e prishë serverin e zhvillimit:
+`NEXT_DIST_DIR=.next-build npm run build`.
 
-## Learn More
+## Faqet
 
-To learn more about Next.js, take a look at the following resources:
+| URL | Përmbajtja |
+| --- | --- |
+| `/` | Kreu: hero, shërbimet, rreth nesh, projektet, pse ne, procesi, CTA |
+| `/rreth-nesh` | Rreth nesh, pse ne, procesi |
+| `/sherbimet` | Të gjitha shërbimet |
+| `/sherbimet/[slug]` | Faqe e veçantë për çdo shërbim (9 faqe) |
+| `/projektet` | Galeria me filtra dhe lightbox |
+| `/kontakt` | Kontakti, formulari, WhatsApp, harta |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Çdo faqe ka titull, përshkrim, URL kanonike dhe Open Graph të vetin. Gjenerohen automatikisht `sitemap.xml`, `robots.txt`, imazhi Open Graph dhe të dhënat e strukturuara (LocalBusiness, Service, BreadcrumbList).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Ku ndryshohen të dhënat
 
-## Deploy on Vercel
+- **`src/config/site.ts`**: emri, telefoni, WhatsApp, email-i, qyteti, adresa, harta Google, rrjetet sociale, logoja dhe URL e faqes. Fushat `null` nuk shfaqen në faqe.
+  - Kur vendosni `city` (p.sh. `"Tiranë"`), titujt SEO bëhen automatikisht "Punime Gipsi në Tiranë" e kështu me radhë.
+  - `mapEmbedUrl`: në Google Maps zgjidhni *Share → Embed a map* dhe kopjoni vlerën `src`.
+- **`src/data/services.ts`**: shërbimet dhe teksti i faqes së secilit shërbim.
+- **`src/data/projects.ts`**: fotot e galerisë. Tani janë foto ilustruese nga Unsplash. Për projektet tuaja, vendosni fotot në `public/projects/` dhe përdorni `image: "/projects/emri.jpg"`.
+- **`src/data/content.ts`**: "Pse ne", procesi i punës dhe pikat e hero-s.
+- **Logoja**: `public/logo.png`. Favicon-i (`src/app/icon.png` dhe `apple-icon.png`) është krijuar nga kjo logo.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Formulari i kontaktit
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pa backend, formulari i kontrollon fushat dhe e hap kërkesën në WhatsApp, me mesazhin gati për t'u dërguar.
+Për ta dërguar kërkesën në email, krijoni një formular në p.sh. [Formspree](https://formspree.io) dhe vendosni:
+
+```bash
+NEXT_PUBLIC_FORM_ENDPOINT=https://formspree.io/f/xxxxxxx
+NEXT_PUBLIC_SITE_URL=https://domeni-juaj.al
+```
+
+në `.env.local` (ose te variablat e mjedisit në hosting, p.sh. Vercel).
