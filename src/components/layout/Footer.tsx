@@ -20,16 +20,16 @@ export default function Footer() {
   return (
     <footer className="bg-ink text-cream">
       <div className="mx-auto max-w-7xl px-5 pb-10 pt-20 sm:px-8">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_1.1fr_1fr]">
+        <div className="grid gap-12 text-center md:grid-cols-2 md:text-left lg:grid-cols-[1.4fr_0.8fr_1.1fr_1fr]">
           <div>
             <Link href="/" aria-label={`${siteConfig.name} – Kreu`}>
               <Logo tone="light" variant="large" showTagline />
             </Link>
-            <p className="mt-6 max-w-xs text-sm leading-relaxed text-cream/60">
+            <p className="mx-auto mt-6 max-w-xs text-sm md:mx-0 leading-relaxed text-cream/60">
               Punime gipsi, tavane dekorative me ndriçim LED, ndarje gipsi, patinim dhe lyerje për banesa dhe
               biznese, me kujdes për çdo detaj.
             </p>
-            <ul className="mt-7 flex gap-3">
+            <ul className="mt-7 flex justify-center gap-3 md:justify-start">
               {socials.map(({ label, href, icon: Icon }) => (
                 <li key={label}>
                   <a
@@ -76,20 +76,20 @@ export default function Footer() {
             <h2 className={heading}>Kontakt</h2>
             <ul className="mt-6 space-y-4 text-sm">
               <li>
-                <a href={`tel:${contact.phone}`} className={`flex items-center gap-3 ${link}`}>
+                <a href={`tel:${contact.phone}`} className={`flex items-center justify-center gap-3 md:justify-start ${link}`}>
                   <Phone className="h-4 w-4 text-gold" aria-hidden="true" />
                   {contact.phoneDisplay}
                 </a>
               </li>
               {contact.email && (
                 <li>
-                  <a href={`mailto:${contact.email}`} className={`flex items-center gap-3 ${link}`}>
+                  <a href={`mailto:${contact.email}`} className={`flex items-center justify-center gap-3 md:justify-start ${link}`}>
                     <Mail className="h-4 w-4 text-gold" aria-hidden="true" />
                     {contact.email}
                   </a>
                 </li>
               )}
-              <li className="flex items-center gap-3 text-cream/65">
+              <li className="flex items-center justify-center gap-3 text-cream/65 md:justify-start">
                 <MapPin className="h-4 w-4 text-gold" aria-hidden="true" />
                 {locationLabel()}
               </li>
@@ -103,7 +103,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-3 border-t border-cream/10 pt-8 text-xs text-cream/45 sm:flex-row sm:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-t border-cream/10 pt-8 text-center text-xs text-cream/45 sm:flex-row sm:text-left sm:justify-between">
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. Të gjitha të drejtat të rezervuara.
           </p>

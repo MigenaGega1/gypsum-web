@@ -29,6 +29,8 @@ const own = (n: number) => `/projects/projekt-${String(n).padStart(2, "0")}.jpg`
  */
 export const projects: Project[] = [
   // --- Punimet e kompanisë ---
+  { title: "Video: punime izolimi", category: "Ndarje Gipsi", image: "/projects/video-06-poster.jpg", video: "/projects/video-06.mp4", alt: "Video e punimeve të izolimit në një dhomë me dysheme dhe mobilje të mbuluara me najlon mbrojtës", size: "tall" },
+  { title: "Shkallë me mure të lyera", category: "Ambiente Banimi", image: own(58), alt: "Shkallë dhe korridor me tavan gipsi, mure të patinuara dhe të lyera me ngjyrë", size: "tall" },
   { title: "Tavan gipsi me linja LED", category: "Tavane Dekorative", image: own(26), alt: "Tavan gipsi i bardhë me linja ndriçimi LED të integruara pranë trarëve prej druri", size: "tall" },
   { title: "Sallon me spote të përgatitura", category: "Ndriçim LED", image: own(7), alt: "Sallon i lyer me tavan gipsi dhe vrima për spote LED", size: "wide" },
   { title: "Video nga punimet në banesë", category: "Ambiente Banimi", image: "/projects/video-01-poster.jpg", video: "/projects/video-01.mp4", alt: "Video e banesës pas punimeve me tavan gipsi dhe mure të lyera", size: "tall" },

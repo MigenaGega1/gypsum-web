@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", priority: 1 },
     { path: "/sherbimet", priority: 0.9 },
     { path: "/projektet", priority: 0.8 },
+    { path: "/cmimet", priority: 0.8 },
     { path: "/rreth-nesh", priority: 0.7 },
     { path: "/kontakt", priority: 0.8 },
   ];

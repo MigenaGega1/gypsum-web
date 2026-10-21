@@ -76,6 +76,7 @@ export const navLinks = [
   { label: "Rreth Nesh", href: "/rreth-nesh" },
   { label: "Shërbimet", href: "/sherbimet" },
   { label: "Projektet", href: "/projektet" },
+  { label: "Çmimet", href: "/cmimet" },
   { label: "Kontakt", href: "/kontakt" },
 ] as const;
 

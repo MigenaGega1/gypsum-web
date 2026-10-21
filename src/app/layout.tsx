@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cinzel, Montserrat, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
@@ -106,12 +107,14 @@ function BusinessStructuredData() {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="sq" className={`${montserrat.variable} ${playfair.variable} ${cinzel.variable}`}>
-      <body>
+      {/* Browser extensions (e.g. ColorZilla adds cz-shortcut-listen) inject attributes on <body> before hydration */}
+      <body suppressHydrationWarning>
         <BusinessStructuredData />
         <Navbar />
         <main id="main">{children}</main>
         <Footer />
         <WhatsAppButton />
+        <Analytics />
       </body>
     </html>
   );

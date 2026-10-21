@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import ButtonLink from "@/components/ui/Button";
-import { heroHighlights } from "@/data/content";
 import { images } from "@/lib/images";
 import { siteConfig } from "@/config/site";
 
