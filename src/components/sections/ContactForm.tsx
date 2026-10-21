@@ -2,18 +2,14 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
-import { CircleAlert, CircleCheck, LoaderCircle, Send } from "lucide-react";
+import { CircleAlert, CircleCheck } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/SocialIcons";
-import { siteConfig, whatsappLink } from "@/config/site";
+import { whatsappLink } from "@/config/site";
 import { services } from "@/data/services";
 
 type Values = { name: string; phone: string; email: string; service: string; message: string };
 type Errors = Partial<Record<keyof Values, string>>;
-type Status =
-  | { type: "idle" }
-  | { type: "sending" }
-  | { type: "success"; message: string; whatsappUrl?: string }
-  | { type: "error"; message: string };
+type Status = { type: "idle" } | { type: "success"; message: string; whatsappUrl: string };
 
 const initialValues: Values = { name: "", phone: "", email: "", service: "", message: "" };
 
@@ -53,7 +49,6 @@ export default function ContactForm() {
   const [touched, setTouched] = useState<Partial<Record<keyof Values, boolean>>>({});
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const statusRef = useRef<HTMLDivElement>(null);
-  const hasEndpoint = Boolean(siteConfig.formEndpoint);
 
   // Preselect a service from the URL, e.g. /kontakt?sherbimi=patinim
   const requestedService = useSearchParams().get("sherbimi");
@@ -64,7 +59,7 @@ export default function ContactForm() {
   }, [requestedService]);
 
   useEffect(() => {
-    if (status.type === "success" || status.type === "error") statusRef.current?.focus();
+    if (status.type === "success") statusRef.current?.focus();
   }, [status.type]);
 
   const update = (field: keyof Values, value: string) => {
@@ -78,7 +73,7 @@ export default function ContactForm() {
     setErrors((er) => ({ ...er, [field]: validate(values)[field] }));
   };
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const found = validate(values);
     setErrors(found);
@@ -91,39 +86,13 @@ export default function ContactForm() {
 
     const serviceTitle = services.find((s) => s.slug === values.service)?.title ?? values.service;
 
-    // No backend configured: hand the request over to WhatsApp instead.
-    if (!siteConfig.formEndpoint) {
-      const url = whatsappLink(buildWhatsAppMessage(values, serviceTitle));
-      window.open(url, "_blank", "noopener,noreferrer");
-      setStatus({
-        type: "success",
-        message:
-          "Mesazhi juaj u përgatit në WhatsApp. Dërgojeni nga aty dhe do t'ju kontaktojmë sa më shpejt.",
-        whatsappUrl: url,
-      });
-      return;
-    }
-
-    const honeypot = (e.currentTarget.elements.namedItem("company_website") as HTMLInputElement | null)?.value;
-    if (honeypot) return;
-
-    setStatus({ type: "sending" });
-    try {
-      const res = await fetch(siteConfig.formEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ ...values, service: serviceTitle }),
-      });
-      if (!res.ok) throw new Error(String(res.status));
-      setStatus({ type: "success", message: "Faleminderit! Kërkesa juaj u dërgua. Do t'ju kontaktojmë së shpejti." });
-      setValues(initialValues);
-      setTouched({});
-    } catch {
-      setStatus({
-        type: "error",
-        message: `Kërkesa nuk u dërgua. Ju lutem provoni përsëri ose na telefononi në ${siteConfig.contact.phoneDisplay}.`,
-      });
-    }
+    const url = whatsappLink(buildWhatsAppMessage(values, serviceTitle));
+    window.open(url, "_blank", "noopener,noreferrer");
+    setStatus({
+      type: "success",
+      message: "Mesazhi juaj u përgatit në WhatsApp. Dërgojeni nga aty dhe do t'ju kontaktojmë sa më shpejt.",
+      whatsappUrl: url,
+    });
   }
 
   const border = (field: keyof Values) =>
@@ -250,39 +219,16 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* Honeypot field for spam bots */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-        <label htmlFor="cf-company">Mos e plotësoni këtë fushë</label>
-        <input id="cf-company" name="company_website" tabIndex={-1} autoComplete="off" />
-      </div>
-
       <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <p id="cf-note" className="max-w-sm text-sm leading-relaxed text-stone">
-          {hasEndpoint
-            ? "Fushat me * janë të detyrueshme."
-            : "Fushat me * janë të detyrueshme. Kërkesa juaj do të hapet në WhatsApp, gati për t'u dërguar."}
+          Fushat me * janë të detyrueshme. Kërkesa juaj do të hapet në WhatsApp, gati për t&apos;u dërguar.
         </p>
         <button
           type="submit"
-          disabled={status.type === "sending"}
-          className="group inline-flex shrink-0 items-center justify-center gap-2.5 rounded-full bg-ink px-7 py-4 text-sm font-semibold text-cream transition-colors duration-300 hover:bg-graphite disabled:cursor-wait disabled:opacity-70"
+          className="group inline-flex shrink-0 items-center justify-center gap-2.5 rounded-full bg-ink px-7 py-4 text-sm font-semibold text-cream transition-colors duration-300 hover:bg-graphite"
         >
-          {status.type === "sending" ? (
-            <>
-              <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
-              Duke dërguar...
-            </>
-          ) : hasEndpoint ? (
-            <>
-              Dërgo kërkesën
-              <Send className="h-4 w-4 text-gold transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-            </>
-          ) : (
-            <>
-              <WhatsAppIcon className="h-4 w-4 text-gold" />
-              Dërgo kërkesën në WhatsApp
-            </>
-          )}
+          <WhatsAppIcon className="h-4 w-4 text-gold" />
+          Dërgo kërkesën në WhatsApp
         </button>
       </div>
 
@@ -296,28 +242,15 @@ export default function ContactForm() {
             <CircleCheck className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
             <div>
               <p>{status.message}</p>
-              {status.whatsappUrl && (
-                <a
-                  href={status.whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-block font-semibold underline underline-offset-4"
-                >
-                  WhatsApp nuk u hap? Klikoni këtu.
-                </a>
-              )}
+              <a
+                href={status.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-block font-semibold underline underline-offset-4"
+              >
+                WhatsApp nuk u hap? Klikoni këtu.
+              </a>
             </div>
-          </div>
-        )}
-        {status.type === "error" && (
-          <div
-            ref={statusRef}
-            tabIndex={-1}
-            role="alert"
-            className="mt-6 flex gap-3 border-l-2 border-red-700 bg-red-50 p-4 text-sm leading-relaxed text-red-900 focus:outline-none"
-          >
-            <CircleAlert className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
-            <p>{status.message}</p>
           </div>
         )}
       </div>

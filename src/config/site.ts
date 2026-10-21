@@ -48,13 +48,6 @@ export const siteConfig = {
     tiktok: null as string | null,
   },
 
-  /**
-   * Optional form endpoint (e.g. Formspree, Getform, or your own API route)
-   * that accepts a JSON POST. While `null`, the contact form validates input
-   * and offers to send the request through WhatsApp instead.
-   */
-  formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? null,
-
   keywords: [
     "punime gipsi",
     "tavane gipsi",
